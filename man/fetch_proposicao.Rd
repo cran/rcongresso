@@ -2,20 +2,66 @@
 % Please edit documentation in R/proposicoes.R
 \name{fetch_proposicao}
 \alias{fetch_proposicao}
-\title{Fetches details from a proposition.}
+\title{Fetches proposition from API using a query}
 \usage{
-fetch_proposicao(id_prop)
+fetch_proposicao(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
+  siglaPartidoAutor = NULL, numero = NULL, ano = NULL,
+  dataApresentacaoInicio = NULL, dataApresentacaoFim = NULL,
+  dataInicio = NULL, dataFim = NULL, idAutor = NULL, autor = NULL,
+  codPartido = NULL, pagina = NULL, itens = NULL)
 }
 \arguments{
-\item{id_prop}{Proposition's ID}
+\item{id}{Proposition's ID}
+
+\item{siglaUfAutor}{State's abbreviation of the proposition's author}
+
+\item{siglaTipo}{Proposition type (i.e., PEC, PL, PDC)}
+
+\item{siglaPartidoAutor}{Party's abbreviation of the proposition's author}
+
+\item{numero}{Proposition number}
+
+\item{ano}{Proposition year}
+
+\item{dataApresentacaoInicio}{Proposition's presentation starting date}
+
+\item{dataApresentacaoFim}{Proposition's presentation end date}
+
+\item{dataInicio}{Proposition's processing starting date}
+
+\item{dataFim}{Proposition's processing end date}
+
+\item{idAutor}{Author's ID}
+
+\item{autor}{Author's name}
+
+\item{codPartido}{Party code}
+
+\item{pagina}{Page number}
+
+\item{itens}{Items quantity by request}
 }
 \value{
 Dataframe containing information about the proposition.
 }
 \description{
-Fetches details from a proposition.
+Fetches information about law's projects, resolutions, provisional measures,
+law amendments, opinions and all the other propositions types on the
+Deputies' Chamber.
+Several parameters can be used to select and filter the final result. By default, the function
+returns all the proposition which were presented or had some situation change in the last
+15 days.
+}
+\details{
+Note that if you have the proposition's ID, it's not necessary to add any other parameter on the
+function call. The call to this function using the proposition's ID returns more details than using the
+others parameters. If you don't have the proposition's ID, the \code{\link[rcongresso]{fetch_id_proposicao}}
+function may be helpful.
 }
 \examples{
-pec241 <- fetch_proposicao(2088351)
-
+pec241 <- fetch_proposicao(id = 2088351)
+pec241 <- fetch_proposicao(siglaTipo = "PEC", numero = 241, ano = 2016)
+}
+\seealso{
+\code{\link[rcongresso]{fetch_tipo_proposicao}}, \code{\link[rcongresso]{fetch_id_proposicao}}
 }

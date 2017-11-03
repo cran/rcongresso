@@ -2,23 +2,29 @@
 
 [![Build Status](https://travis-ci.org/analytics-ufcg/rcongresso.svg?branch=master)](https://travis-ci.org/analytics-ufcg/rcongresso)
 [![codecov](https://codecov.io/gh/analytics-ufcg/rcongresso/branch/master/graph/badge.svg)](https://codecov.io/gh/analytics-ufcg/rcongresso)
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/rcongresso)](https://cran.r-project.org/package=rcongresso)
+![](https://cranlogs.r-pkg.org/badges/grand-total/rcongresso)
 
-Pacote R para acessar dados do congresso nacional baseado na API RESTful criada em 2017 (https://dadosabertos.camara.leg.br/) e como uma tidy tool que interaja bem com o tidyverse.
+Pacote R para acessar dados do congresso nacional baseado na API RESTful criada em 2017 (https://dadosabertos.camara.leg.br/), gerando data frames e interagindo bem com o tidyverse.
+
+Site: https://analytics-ufcg.edu.br/rcongresso 
 
 Para instalar:
 
 ```R
-# Caso você não possua o devtools
-# install.packages('devtools')
+# Versão estável: 
+install.packages("rcongresso")
 
-# Instala o pacote a partir do github
+# A mais atual: 
+# install.packages('devtools')
 devtools::install_github('analytics-ufcg/rcongresso')
 ```
 
-Uma vignette de exemplo do uso:
+Exemplos de uso:
 
 ```R
-library(rcongresso)
-devtools::build_vignettes()
-vignette("qmr-uma-votacao", package="rcongresso")
+vignette("introducao-rcongresso", package="rcongresso")
+vignette("purrr-e-rcongresso", package="rcongresso")
+
+# se você instalou do github, antes faça: devtools::build_vignettes()
 ```

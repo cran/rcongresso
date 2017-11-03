@@ -12,7 +12,7 @@ proposicoes = frame_data(
   "PL",  1057,    2007
 ) %>%
   pmap(fetch_id_proposicao) %>%
-  map_df(~ (fetch_proposicao(.)))
+  map_df(fetch_proposicao)
 
 glimpse(proposicoes)
 
@@ -25,8 +25,8 @@ fetch_id_ultima_votacao = function(id_proposicao){
 
 ## ------------------------------------------------------------------------
 votos = proposicoes %>%
-  mutate(id_votacao = map_int(id, ~ fetch_id_ultima_votacao(.))) %>%
-  mutate(votos = map(id_votacao, ~ fetch_votos(.))) %>%
+  mutate(id_votacao = map_int(id, fetch_id_ultima_votacao)) %>%
+  mutate(votos = map(id_votacao, fetch_votos)) %>%
   unnest(votos)
 
 glimpse(votos)
@@ -58,8 +58,8 @@ votos %>%
 
 ## ------------------------------------------------------------------------
 orientacoes = proposicoes %>%
-  mutate(id_votacao = map_int(id, ~ fetch_id_ultima_votacao(.))) %>%
-  mutate(o = map(id_votacao, ~ fetch_orientacoes(.))) %>%
+  mutate(id_votacao = map_int(id, fetch_id_ultima_votacao)) %>%
+  mutate(o = map(id_votacao, fetch_orientacoes)) %>%
   unnest(o)
 
 glimpse(orientacoes)
