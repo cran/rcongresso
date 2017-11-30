@@ -1,7 +1,7 @@
 Package: rcongresso
 Type: Package
 Title: Wraps the API for the Brazilian Chamber of Deputies
-Version: 0.2.1
+Version: 0.3.0
 Authors@R: c(
     person("Paulo Vinícius", "Soares", , "paulo.soares@ccc.ufcg.edu.br", c("aut", "cre")),
     person("Nazareno", "Andrade", , "nazareno@computacao.ufcg.edu.br", c("aut")),
@@ -14,16 +14,16 @@ Description: Provides propositions, votings, deputies and parties data from
 License: LGPL-3
 Encoding: UTF-8
 LazyData: true
-Imports: httr, jsonlite, magrittr, dplyr, tibble, tidyr, utils
+Imports: httr, jsonlite, magrittr, dplyr, tibble, tidyr
 Suggests: testthat, compare, readr, knitr, rmarkdown, DT, ggplot2,
         purrr
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2017-11-03 17:55:31 UTC; paulo.soares
+Packaged: 2017-11-30 17:51:54 UTC; paulo.soares
 Author: Paulo Vinícius Soares [aut, cre],
   Nazareno Andrade [aut],
   Laboratório Analytics (UFCG) [cph, fnd]
 Maintainer: Paulo Vinícius Soares <paulo.soares@ccc.ufcg.edu.br>
 Repository: CRAN
-Date/Publication: 2017-11-03 18:09:02 UTC
+Date/Publication: 2017-11-30 18:24:50 UTC

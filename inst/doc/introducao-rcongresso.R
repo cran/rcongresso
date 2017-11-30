@@ -5,7 +5,7 @@ library(dplyr)
 library(knitr)
 
 ## ------------------------------------------------------------------------
-pl4302_id <- fetch_proposicao(siglaTipo = "PL", numero = 4302, ano = 1998)$id
+pl4302_id <- fetch_id_proposicao(tipo = "PL", numero = 4302, ano = 1998)
 
 ## ------------------------------------------------------------------------
 pl4302 <- fetch_proposicao(id = pl4302_id)
