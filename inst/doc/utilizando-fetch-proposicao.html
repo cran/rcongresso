@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Paulo Vinícius Soares" />
+
+<meta name="date" content="2017-12-13" />
+
+<title>Entendendo os parâmetros utilizados na função fetch_proposicao()</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Entendendo os parâmetros utilizados na função fetch_proposicao()</h1>
+<h4 class="author"><em>Paulo Vinícius Soares</em></h4>
+<h4 class="date"><em>2017-12-13</em></h4>
+
+
+
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rcongresso)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(tidyr)
+<span class="kw">library</span>(purrr)
+<span class="kw">library</span>(ggplot2)</code></pre></div>
+<div id="introducao" class="section level1">
+<h1>Introdução</h1>
+<p>Na versão 0.2 do <code>rcongresso</code>, a função <code>fetch_proposicao()</code> agora dá suporte à consultas mais complexas utilizando o endpoint <code>/proposicoes</code>. Para mais detalhes sobre os parâmetros, visite a página dos <a href="https://dadosabertos.camara.leg.br/swagger/api.html">Dados Abertos</a>.</p>
+</div>
+<div id="conhecendo-os-parametros" class="section level1">
+<h1>Conhecendo os parâmetros</h1>
+<p>A <em>query</em> da consulta possui os seguintes parâmetros:</p>
+<ul>
+<li><code>id</code>: Numeração única utilizada para identificar as proposições.</li>
+<li><code>siglaUfAutor</code>: Sigla do estado do autor da proposição.</li>
+<li><code>siglaTipo</code>: Sigla do tipo da proposição, por exemplo PEC, REQ, PL, PLP, entre outros. Veja mais <a href="https://dadosabertos.camara.leg.br/api/v2/referencias/tiposProposicao">detalhes</a>.</li>
+<li><code>siglaPartidoAutor</code>: Sigla do partido do autor da proposição, por exemplo DEM, PMDB, PT, entre outros.</li>
+<li><code>numero</code>: Número da proposição. Por exemplo, a busca pela proposição PEC <strong>182</strong>/2007 tem 182 como parâmetro número.</li>
+<li><code>ano</code>: Ano em que a proposição foi apresentada.</li>
+<li><code>dataApresentacaoInicio</code>: Data do início do intervalo de tempo em que tenham sido apresentadas as proposições a serem listadas, no formato <code>AAAA-MM-DD</code>. Por exemplo, ao buscar as proposições que foram apresentadas a partir do dia 21/10/2005, o parâmetro <code>dataApresentacaoInicio</code> dessa busca seria <em>2005-10-21</em>.</li>
+<li><code>dataApresentacaoFim</code>: Data do fim do intervalo de tempo em que tenham sido apresentadas as proposições a serem listadas. Por exemplo, ao buscar as proposições que foram apresentadas até o dia 10/12/2010, o parâmetro <code>dataApresentacaoFim</code> dessa busca seria <em>2010-12-10</em> (formato <code>AAAA-MM-DD</code>).</li>
+<li><code>dataInicio</code>: Data do início do intervalo de tempo em que tenha havido tramitação das proposições a serem listadas, no formato <code>AAAA-MM-DD</code>. Se omitido, é assumido como a data de 30 dias anteriores à proposição.</li>
+<li><code>dataFim</code>: Data do fim do intervalo de tempo em que tenha havido tramitação das proposições a serem listadas. Se omitido, é considerado ser o dia em que é feita a requisição.</li>
+<li><code>idAutor</code>: ID do deputado que é autor da proposição.</li>
+<li><code>autor</code>: Nome eleitoral do autor da proposição em forma de string.</li>
+<li><code>idSituacao</code>: Número que representa a situação de uma proposição, como um <em>enum</em>.</li>
+<li><code>codPartido</code>: Número que representa o partido do deputado autor da proposição, também funcionando como um enum.</li>
+<li><code>itens</code>: Número máximo de itens na resposta.</li>
+</ul>
+</div>
+<div id="tipos-de-busca" class="section level1">
+<h1>Tipos de busca</h1>
+<p>Para melhor compreensão de quais parâmetros agrupados retornam as melhores respostas serão divididos dois tipos de busca: A <strong>busca direta</strong> e a <strong>busca indireta</strong>. A busca direta é definida como a busca em que se sabe quais proposições serão retornadas ou já se sabe previamente quais proposições pesquisar. Por exemplo, deseja-se buscar mais informações ou recuperar da base de dados a PEC 241/2016. Na busca indireta, não se sabe quais proposições serão retornadas, estas serão definidas por algum parâmetro tal qual tempo, autor ou partido. Por exemplo, deseja-se saber todas as proposições sugeridas por determinado deputado.</p>
+<div id="busca-direta" class="section level2">
+<h2>Busca direta</h2>
+<p>Na busca direta, existem duas situações: o ID da proposição é conhecido ou não. Vejamos como proceder em ambos os casos.</p>
+<div id="o-id-da-proposicao-nao-e-conhecido" class="section level3">
+<h3>O ID da proposição não é conhecido</h3>
+<p>Caso o ID da proposição não seja conhecido, utilizar a função <code>fetch_id_proposicao()</code> pode ser útil. Utilizar as funções <code>pmap</code> e <code>map_df</code> da biblioteca <em>purrr</em> facilita a recuperação de muitas proposições da base de dados.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">frame_data</span>(
+  <span class="op">~</span>tipo, <span class="op">~</span>numero, <span class="op">~</span>ano,
+  <span class="st">&quot;PEC&quot;</span>, <span class="dv">241</span>, <span class="dv">2016</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># PEC dos gastos públicos</span>
+<span class="st">  </span><span class="kw">pmap</span>(fetch_id_proposicao) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">map_df</span>(fetch_proposicao) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">glimpse</span>()</code></pre></div>
+<pre><code>## Observations: 1
+## Variables: 13
+## $ id               &lt;int&gt; 2088351
+## $ uri              &lt;chr&gt; &quot;https://dadosabertos.camara.leg.br/api/v2/pr...
+## $ siglaTipo        &lt;chr&gt; &quot;PEC&quot;
+## $ idTipo           &lt;int&gt; 136
+## $ numero           &lt;int&gt; 241
+## $ ano              &lt;int&gt; 2016
+## $ ementa           &lt;chr&gt; &quot;Altera o Ato das Disposições Constitucionais...
+## $ dataApresentacao &lt;chr&gt; &quot;2016-06-15T21:47&quot;
+## $ tipoAutor        &lt;chr&gt; &quot;Órgão do Poder Executivo&quot;
+## $ idTipoAutor      &lt;int&gt; 30000
+## $ descricaoTipo    &lt;chr&gt; &quot;Proposta de Emenda à Constituição&quot;
+## $ keywords         &lt;chr&gt; &quot;Constituição Federal (1988), Ato das Disposi...
+## $ urlInteiroTeor   &lt;chr&gt; &quot;http://www.camara.gov.br/proposicoesWeb/prop...</code></pre>
+<p>Recuperando várias proposições da base de dados, temos:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">frame_data</span>(
+  <span class="op">~</span>tipo, <span class="op">~</span>numero, <span class="op">~</span>ano,
+  <span class="st">&quot;PEC&quot;</span>, <span class="dv">241</span>, <span class="dv">2016</span>, <span class="co"># PEC dos gastos públicos</span>
+  <span class="st">&quot;PL&quot;</span>, <span class="dv">4474</span>, <span class="dv">2016</span>, <span class="co"># PL dos correios</span>
+  <span class="st">&quot;PL&quot;</span>, <span class="dv">3722</span>, <span class="dv">2012</span>, <span class="co"># PL do estatuto do desarmamento</span>
+  <span class="st">&quot;PL&quot;</span>, <span class="dv">158</span>, <span class="dv">2015</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># PL da proibição do porte e consumo de drogas</span>
+<span class="st">  </span><span class="kw">pmap</span>(fetch_id_proposicao) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">map_df</span>(fetch_proposicao) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">glimpse</span>()</code></pre></div>
+<pre><code>## Observations: 4
+## Variables: 15
+## $ id               &lt;int&gt; 2088351, 2077582, 541857, 945672
+## $ uri              &lt;chr&gt; &quot;https://dadosabertos.camara.leg.br/api/v2/pr...
+## $ siglaTipo        &lt;chr&gt; &quot;PEC&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;
+## $ idTipo           &lt;int&gt; 136, 139, 139, 139
+## $ numero           &lt;int&gt; 241, 4474, 3722, 158
+## $ ano              &lt;int&gt; 2016, 2016, 2012, 2015
+## $ ementa           &lt;chr&gt; &quot;Altera o Ato das Disposições Constitucionais...
+## $ dataApresentacao &lt;chr&gt; &quot;2016-06-15T21:47&quot;, &quot;2016-02-18T17:52&quot;, &quot;2012...
+## $ tipoAutor        &lt;chr&gt; &quot;Órgão do Poder Executivo&quot;, &quot;Deputado&quot;, &quot;Depu...
+## $ idTipoAutor      &lt;int&gt; 30000, 10000, 10000, 10000
+## $ descricaoTipo    &lt;chr&gt; &quot;Proposta de Emenda à Constituição&quot;, &quot;Projeto...
+## $ keywords         &lt;chr&gt; &quot;Constituição Federal (1988), Ato das Disposi...
+## $ urlInteiroTeor   &lt;chr&gt; &quot;http://www.camara.gov.br/proposicoesWeb/prop...
+## $ uriAutores       &lt;chr&gt; NA, &quot;https://dadosabertos.camara.leg.br/api/v...
+## $ uriPropPrincipal &lt;chr&gt; NA, &quot;https://dadosabertos.camara.leg.br/api/v...</code></pre>
+</div>
+<div id="o-id-da-proposicao-e-conhecido" class="section level3">
+<h3>O ID da proposição é conhecido</h3>
+<p>Nesse caso fazemos uma chamada ao método utilizando o parêmetro <code>id</code>. Por exemplo, a PEC 241/2016 tem o id = 2088351, então fazemos:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fetch_proposicao</span>(<span class="dt">id =</span> <span class="dv">2088351</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">glimpse</span>()</code></pre></div>
+<pre><code>## Observations: 1
+## Variables: 13
+## $ id               &lt;int&gt; 2088351
+## $ uri              &lt;chr&gt; &quot;https://dadosabertos.camara.leg.br/api/v2/pr...
+## $ siglaTipo        &lt;chr&gt; &quot;PEC&quot;
+## $ idTipo           &lt;int&gt; 136
+## $ numero           &lt;int&gt; 241
+## $ ano              &lt;int&gt; 2016
+## $ ementa           &lt;chr&gt; &quot;Altera o Ato das Disposições Constitucionais...
+## $ dataApresentacao &lt;chr&gt; &quot;2016-06-15T21:47&quot;
+## $ tipoAutor        &lt;chr&gt; &quot;Órgão do Poder Executivo&quot;
+## $ idTipoAutor      &lt;int&gt; 30000
+## $ descricaoTipo    &lt;chr&gt; &quot;Proposta de Emenda à Constituição&quot;
+## $ keywords         &lt;chr&gt; &quot;Constituição Federal (1988), Ato das Disposi...
+## $ urlInteiroTeor   &lt;chr&gt; &quot;http://www.camara.gov.br/proposicoesWeb/prop...</code></pre>
+<p>Podemos utilizar também uma lista de IDs:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ids &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">611966</span>, <span class="dv">291906</span>, <span class="dv">333205</span>, <span class="dv">458609</span>, <span class="dv">517924</span>, <span class="dv">1999440</span>, <span class="dv">2090343</span>)
+
+<span class="kw">fetch_proposicao</span>(ids) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">glimpse</span>()</code></pre></div>
+<pre><code>## Observations: 7
+## Variables: 14
+## $ id               &lt;int&gt; 611966, 291906, 333205, 458609, 517924, 19994...
+## $ uri              &lt;chr&gt; &quot;https://dadosabertos.camara.leg.br/api/v2/pr...
+## $ siglaTipo        &lt;chr&gt; &quot;PEC&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;
+## $ idTipo           &lt;int&gt; 136, 139, 139, 139, 139, 139, 139
+## $ numero           &lt;int&gt; 395, 5507, 7476, 6361, 2163, 3205, 5741
+## $ ano              &lt;int&gt; 2014, 2005, 2006, 2009, 2011, 2015, 2016
+## $ ementa           &lt;chr&gt; &quot;Altera a redação do inciso IV do art. 206 da...
+## $ dataApresentacao &lt;chr&gt; &quot;2014-04-09T17:42&quot;, &quot;2005-06-27T17:28&quot;, &quot;2006...
+## $ tipoAutor        &lt;chr&gt; &quot;Deputado&quot;, &quot;Deputado&quot;, &quot;Órgão do Poder Execu...
+## $ idTipoAutor      &lt;int&gt; 10000, 10000, 30000, 40000, 10000, 10000, 10000
+## $ uriAutores       &lt;chr&gt; &quot;https://dadosabertos.camara.leg.br/api/v2/de...
+## $ descricaoTipo    &lt;chr&gt; &quot;Proposta de Emenda à Constituição&quot;, &quot;Projeto...
+## $ keywords         &lt;chr&gt; &quot;Gratuidade, ensino público, educação básica,...
+## $ urlInteiroTeor   &lt;chr&gt; &quot;http://www.camara.gov.br/proposicoesWeb/prop...</code></pre>
+</div>
+</div>
+<div id="busca-indireta" class="section level2">
+<h2>Busca indireta</h2>
+<p>Essa busca dá mais liberdade ao usuário permitindo o cruzamento entre parâmetros para o retorno de um conjunto de proposições que se queira analisar. São inúmeras combinações possíveis para os parâmetros, portanto nessa <em>vignette</em> serão abordadas apenas exemplos de buscas mais comuns deixando as demais a critério do usuário.</p>
+<p>Ao fazer esse tipo de busca, em geral, o usuário não tem ideia de quantos itens serão retornados. Dessa forma é indicado utilizar o parâmetro <code>itens</code> para definir o máximo de itens retornados. Caso o parâmetro não seja especificado serão retornados 15 itens (valor default definido na API). Os 15 itens retornados são os que sofreram as modificações mais recentemente.</p>
+<p>Os intervalos de tempo, seja de tramitação ou de apresentação, também são indicados nas buscas a fim de refinar os resultados.</p>
+<div id="intervalo-de-tempo-de-apresentacao" class="section level3">
+<h3>Intervalo de tempo de apresentação</h3>
+<p>Os parâmetros utilizados nessa busca são <code>dataApresentacaoInicio</code> e <code>dataApresentacaoFim</code>, ambos se referem às datas em que as proposições foram apresentadas na câmara.</p>
+<p>Vejamos quais proposições foram apresentadas no mês de Janeiro de 2017:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fetch_proposicao</span>(<span class="dt">dataApresentacaoInicio =</span> <span class="st">&quot;2017-01-01&quot;</span>, <span class="dt">dataApresentacaoFim =</span> <span class="st">&quot;2017-01-31&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">glimpse</span>()</code></pre></div>
+<pre><code>## Observations: 15
+## Variables: 7
+## $ id        &lt;int&gt; 13704, 13756, 13773, 13780, 14294, 14666, 14944, 153...
+## $ uri       &lt;chr&gt; &quot;https://dadosabertos.camara.leg.br/api/v2/proposico...
+## $ siglaTipo &lt;chr&gt; &quot;PDC&quot;, &quot;PDC&quot;, &quot;PDC&quot;, &quot;PDC&quot;, &quot;PEC&quot;, &quot;PEC&quot;, &quot;PL&quot;, &quot;PL&quot;...
+## $ idTipo    &lt;int&gt; 135, 135, 135, 135, 136, 136, 139, 139, 139, 139, 13...
+## $ numero    &lt;int&gt; 347, 388, 407, 413, 42, 290, 20, 334, 688, 693, 728,...
+## $ ano       &lt;int&gt; 1999, 2000, 2000, 2000, 1999, 2000, 1999, 1999, 1999...
+## $ ementa    &lt;chr&gt; &quot;Condiciona a privatização da Companhia Hidroelétric...</code></pre>
+</div>
+<div id="intervalo-de-tempo-de-tramitacao" class="section level3">
+<h3>Intervalo de tempo de tramitação</h3>
+<p>Essa busca é feita quando se deseja recuperar proposições que sofreram mudança de status em algum intervalo de tempo. Os parâmetros utilizados são <code>dataInicio</code> e <code>dataFim</code>.</p>
+<p>Vamos ver quais proposições sofreram mudanças no mês de novembro:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fetch_proposicao</span>(<span class="dt">dataInicio =</span> <span class="st">&quot;2017-11-01&quot;</span>, <span class="dt">dataFim =</span> <span class="st">&quot;2017-11-30&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">glimpse</span>()</code></pre></div>
+<pre><code>## Observations: 15
+## Variables: 7
+## $ id        &lt;int&gt; 14944, 15743, 16164, 16205, 16249, 16272, 17154, 171...
+## $ uri       &lt;chr&gt; &quot;https://dadosabertos.camara.leg.br/api/v2/proposico...
+## $ siglaTipo &lt;chr&gt; &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;...
+## $ idTipo    &lt;int&gt; 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 13...
+## $ numero    &lt;int&gt; 20, 688, 1029, 1060, 1096, 1115, 1741, 1770, 1911, 1...
+## $ ano       &lt;int&gt; 1999, 1999, 1991, 1988, 1999, 1995, 1996, 1999, 1989...
+## $ ementa    &lt;chr&gt; &quot;Altera a redação do art. 44 do Decreto-Lei nº 2.848...</code></pre>
+</div>
+<div id="por-partido" class="section level3">
+<h3>Por partido</h3>
+<p>Essa busca utiliza o parâmetro <code>siglaPartidoAutor</code> e retorna todas as proposições sugeridas por deputados de determinado partido.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fetch_proposicao</span>(<span class="dt">siglaPartidoAutor =</span> <span class="st">&quot;PSC&quot;</span>, <span class="dt">itens =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">glimpse</span>()</code></pre></div>
+<pre><code>## Observations: 65
+## Variables: 7
+## $ id        &lt;int&gt; 376419, 485961, 491071, 491666, 491667, 499767, 5006...
+## $ uri       &lt;chr&gt; &quot;https://dadosabertos.camara.leg.br/api/v2/proposico...
+## $ siglaTipo &lt;chr&gt; &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;...
+## $ idTipo    &lt;int&gt; 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 13...
+## $ numero    &lt;int&gt; 2412, 7852, 117, 328, 329, 1183, 1235, 2959, 3462, 3...
+## $ ano       &lt;int&gt; 2007, 2010, 2011, 2011, 2011, 2011, 2011, 2011, 2012...
+## $ ementa    &lt;chr&gt; &quot;Dispõe sobre a execução administrativa da Dívida At...</code></pre>
+</div>
+<div id="por-estado" class="section level3">
+<h3>Por estado</h3>
+<p>Essa busca utiliza o parâmetro <code>siglaUfAutor</code> e retorna todas as proposições cujos autores são de determinado estado. Por exemplo, deseja-se ver quais as últimas proposições apresentadas pelos deputados da região nordeste. A busca pode ser feita da seguinte maneira:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">estados_nordeste &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;RN&quot;</span>, <span class="st">&quot;PB&quot;</span>, <span class="st">&quot;CE&quot;</span>, <span class="st">&quot;PE&quot;</span>, <span class="st">&quot;SE&quot;</span>, <span class="st">&quot;AL&quot;</span>, <span class="st">&quot;BA&quot;</span>, <span class="st">&quot;PI&quot;</span>, <span class="st">&quot;MA&quot;</span>)
+
+<span class="kw">fetch_proposicao</span>(<span class="dt">siglaUfAutor =</span> estados_nordeste, <span class="dt">itens =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">glimpse</span>()</code></pre></div>
+<pre><code>## Observations: 785
+## Variables: 7
+## $ id        &lt;int&gt; 18248, 455142, 492475, 524950, 529393, 556644, 56359...
+## $ uri       &lt;chr&gt; &quot;https://dadosabertos.camara.leg.br/api/v2/proposico...
+## $ siglaTipo &lt;chr&gt; &quot;PL&quot;, &quot;PLP&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL...
+## $ idTipo    &lt;int&gt; 139, 140, 139, 139, 139, 139, 139, 139, 139, 139, 13...
+## $ numero    &lt;int&gt; 2524, 525, 489, 2583, 2816, 4508, 4856, 6166, 1621, ...
+## $ ano       &lt;int&gt; 2000, 2009, 2011, 2011, 2011, 2012, 2012, 2013, 2015...
+## $ ementa    &lt;chr&gt; &quot;Regulamenta o art. 238 da Constituição Federal, ord...</code></pre>
+</div>
+<div id="por-autor-e-id-autor" class="section level3">
+<h3>Por autor e ID autor</h3>
+<p>Essa busca utiliza os parâmetros <code>autor</code> e <code>idAutor</code>. São retornadas as proposições que sofreram mudanças nos últimos 15 dias cujos autores se encontram na lista de busca.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">autores &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Luiza Erundina&quot;</span>, <span class="st">&quot;Pedro Fernandes&quot;</span>, <span class="st">&quot;Haroldo Lima&quot;</span>, <span class="st">&quot;Jandira&quot;</span>)
+
+<span class="kw">fetch_proposicao</span>(<span class="dt">autor =</span> autores) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">glimpse</span>()</code></pre></div>
+<pre><code>## Observations: 21
+## Variables: 7
+## $ id        &lt;int&gt; 361065, 2152955, 2164439, 2165913, 2166107, 15319, 4...
+## $ uri       &lt;chr&gt; &quot;https://dadosabertos.camara.leg.br/api/v2/proposico...
+## $ siglaTipo &lt;chr&gt; &quot;PLP&quot;, &quot;REQ&quot;, &quot;VTS&quot;, &quot;REQ&quot;, &quot;PRL&quot;, &quot;PL&quot;, &quot;PL&quot;, &quot;PL&quot;,...
+## $ idTipo    &lt;int&gt; 140, 147, 260, 308, 190, 139, 139, 139, 667, 667, 13...
+## $ numero    &lt;int&gt; 93, 162, 1, 7903, 1, 334, 6810, 7455, 1, 1, 347, 413...
+## $ ano       &lt;int&gt; 2007, 2017, 0, 2017, 0, 1999, 2010, 2017, 0, 0, 1999...
+## $ ementa    &lt;chr&gt; &quot;Estabelece a criação do Segmento Nacional de Finanç...</code></pre>
+</div>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
