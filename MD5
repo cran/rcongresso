@@ -1,4 +1,4 @@
-3b61a55a85846f3109d30e0d83106267 *DESCRIPTION
+f0adc046c75db6a6b00855c2bc520175 *DESCRIPTION
 4955e1ecba40f93629def9cda40071f5 *NAMESPACE
 021e284451fb993147091027e26b916f *R/constants.R
 f57dfb19b842b6824e50db1dd48c7f13 *R/deputados.R
@@ -10,13 +10,13 @@ f57dfb19b842b6824e50db1dd48c7f13 *R/deputados.R
 2f1713b365db98865900af47c6edd288 *build/vignette.rds
 5a0e884d2d720eebcd1148b16567090f *inst/doc/introducao-rcongresso.R
 266da99a07a44e6e260f5f96ad12a12e *inst/doc/introducao-rcongresso.Rmd
-a091b62af04e7604eb37080689071dbc *inst/doc/introducao-rcongresso.html
+92ef2d66ac3b72b5c1787a906873c8b8 *inst/doc/introducao-rcongresso.html
 99e9ab0f015b3d2ba1ab60269e7aa3f2 *inst/doc/purrr-e-rcongresso.R
 19865257ee870c56116a57f97d40ab9a *inst/doc/purrr-e-rcongresso.Rmd
-cb939e7a69754d76c67ef93dd1841786 *inst/doc/purrr-e-rcongresso.html
+64590e2ebe089e2f0600b954f189d90a *inst/doc/purrr-e-rcongresso.html
 c898aaae8a19f972ea8046323689b814 *inst/doc/utilizando-fetch-proposicao.R
 30deb50de2102ef2f358f6c2ad72c8f0 *inst/doc/utilizando-fetch-proposicao.Rmd
-c08b6bd2a54133a934760d35aafcf6ed *inst/doc/utilizando-fetch-proposicao.html
+8befec7ccf730b5f34188f2573587370 *inst/doc/utilizando-fetch-proposicao.html
 9d4074cac6ea9e3310744ee7a5f93b1d *man/fetch_deputado.Rd
 a672a75ebbcdb98a402b8deb1b0ea904 *man/fetch_despesas_deputado.Rd
 f71a7110786206a13d57919b2aedd6bc *man/fetch_id_proposicao.Rd
@@ -35,7 +35,7 @@ e14975b2732d74661828781693fb68f5 *man/get_votos_partidos.Rd
 b235d1c9ac69feb022fec0b38abb284e *tests/testthat.R
 809a7237af12512abfc82230e647eb4e *tests/testthat/test_deputados.R
 11963dda9c3a35a84c11bbcf08b37a4b *tests/testthat/test_proposicoes.R
-e4bba0e7af409f735b9a9d738618b049 *tests/testthat/test_votacoes.R
+f2e8b9408954d1d9ffb116ce2b5d67eb *tests/testthat/test_votacoes.R
 266da99a07a44e6e260f5f96ad12a12e *vignettes/introducao-rcongresso.Rmd
 19865257ee870c56116a57f97d40ab9a *vignettes/purrr-e-rcongresso.Rmd
 30deb50de2102ef2f358f6c2ad72c8f0 *vignettes/utilizando-fetch-proposicao.Rmd

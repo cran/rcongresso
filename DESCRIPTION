@@ -1,7 +1,7 @@
 Package: rcongresso
 Type: Package
 Title: Wraps the API for the Brazilian Chamber of Deputies
-Version: 0.3.1
+Version: 0.3.2
 Authors@R: c(
     person("Paulo Vinícius", "Soares", , "paulo.soares@ccc.ufcg.edu.br", c("aut", "cre")),
     person("Nazareno", "Andrade", , "nazareno@computacao.ufcg.edu.br", c("aut")),
@@ -20,10 +20,10 @@ Suggests: testthat, compare, readr, knitr, rmarkdown, DT, ggplot2,
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2017-12-13 19:44:19 UTC; paulo.soares
+Packaged: 2018-01-26 13:44:20 UTC; paulo.soares
 Author: Paulo Vinícius Soares [aut, cre],
   Nazareno Andrade [aut],
   Laboratório Analytics (UFCG) [cph, fnd]
 Maintainer: Paulo Vinícius Soares <paulo.soares@ccc.ufcg.edu.br>
 Repository: CRAN
-Date/Publication: 2017-12-13 20:04:23 UTC
+Date/Publication: 2018-01-26 14:01:57 UTC
