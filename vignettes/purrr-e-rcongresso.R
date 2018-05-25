@@ -40,8 +40,10 @@ votos %>%
   coord_flip()
 
 ## ------------------------------------------------------------------------
+safely_fetch_deputado <- possibly(fetch_deputado, otherwise = NA)
 deputados = tibble(parlamentar.id = unique(votos$parlamentar.id)) %>% 
-  mutate(dados_parlamentar = map(parlamentar.id, fetch_deputado)) %>% 
+  mutate(dados_parlamentar = map(parlamentar.id, safely_fetch_deputado)) %>% 
+  filter(!is.na(dados_parlamentar)) %>%
   unnest(dados_parlamentar)
 
 glimpse(deputados)

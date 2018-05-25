@@ -55,6 +55,8 @@ fetch_proposicao(siglaUfAutor = estados_nordeste, itens = 100) %>%
 ## ------------------------------------------------------------------------
 autores <- c("Luiza Erundina", "Pedro Fernandes", "Haroldo Lima", "Jandira")
 
-fetch_proposicao(autor = autores) %>%
-  glimpse()
+tryCatch(
+  fetch_proposicao(autor = autores) %>%
+    glimpse()
+)
 

@@ -18,7 +18,8 @@
 #' @param idAutor Author's ID
 #' @param autor Author's name
 #' @param codPartido Party code
-#' @param itens Items quantity
+#' @param itens Items quantity. '-1' returns all the propositions which had been processed
+#' in the last 30 days
 #' @return Dataframe containing information about the proposition.
 #' @details Note that if you have the proposition's ID, it's not necessary to add any other parameter on the
 #' function call. The call to this function using the proposition's ID returns more details than using the
@@ -40,12 +41,17 @@ fetch_proposicao <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
   parametros <- as.list(environment(), all=TRUE)
 
   if(!length(.verifica_parametros_entrada(parametros)))
-    .congresso_api(.PROPOSICOES_PATH)$dados
-  else if(is.null(id)){
-    .fetch_using_queries(parametros, .PROPOSICOES_PATH)
-  }
+    .congresso_api(.PROPOSICOES_PATH) %>%
+    .assert_dataframe_completo(.COLNAMES_PROPOSICAO) %>%
+    .coerce_types(.COLNAMES_PROPOSICAO)
+  else if(is.null(id))
+    .fetch_using_queries(parametros, .PROPOSICOES_PATH)%>%
+    .assert_dataframe_completo(.COLNAMES_PROPOSICAO) %>%
+    .coerce_types(.COLNAMES_PROPOSICAO)
   else
-    .fetch_using_id(id, .PROPOSICOES_PATH)
+    .fetch_using_id(id, .PROPOSICOES_PATH)%>%
+    .assert_dataframe_completo(.COLNAMES_PROPOSICAO_POR_ID) %>%
+    .coerce_types(.COLNAMES_PROPOSICAO_POR_ID)
 }
 
 #' @title Fetches all the votings which a proposition went through
@@ -64,9 +70,34 @@ fetch_votacoes <- function(id_prop){
     dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id, "/votacoes")) %>%
     dplyr::rowwise() %>%
     dplyr::do(
-      .congresso_api(.$path)[[1]]
+      .congresso_api(.$path)
     ) %>%
-    dplyr::ungroup()
+    dplyr::ungroup() %>%
+    .assert_dataframe_completo(.COLNAMES_VOTACOES) %>%
+    .coerce_types(.COLNAMES_VOTACOES)
+}
+
+#' @title Fetches all propositions related to a proposition
+#' @description Returns all propositions related to a proposition by its id.
+#' @param id_prop Proposition's ID
+#' @return Dataframe containing all the related propositions.
+#' @examples
+#' relacionadas_pec241 <- fetch_relacionadas(2088351)
+#' @seealso
+#'   \code{\link[rcongresso]{fetch_id_proposicao}}
+#' @rdname fetch_relacionadas
+#' @export
+fetch_relacionadas <- function(id_prop){
+  id <- NULL
+  tibble::tibble(id = id_prop) %>%
+    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id, "/relacionadas")) %>%
+      dplyr::rowwise() %>%
+      dplyr::do(
+               .congresso_api(.$path)
+             ) %>%
+      dplyr::ungroup() %>%
+      .assert_dataframe_completo(.COLNAMES_RELACIONADAS) %>%
+      .coerce_types(.COLNAMES_RELACIONADAS)
 }
 
 #' @title Retrieves the proposition ID from its type, number and year
@@ -78,7 +109,7 @@ fetch_votacoes <- function(id_prop){
 #' @examples
 #' pec241_id <- fetch_id_proposicao("PEC", 241, 2016)
 #' @seealso
-#'   \code{\link[rcongresso]{fetch_id_proposicao}}
+#'   \code{\link[rcongresso]{fetch_id_partido}}
 #' @rdname fetch_id_proposicao
 #' @export
 fetch_id_proposicao <- function(tipo, numero, ano){
@@ -87,7 +118,8 @@ fetch_id_proposicao <- function(tipo, numero, ano){
     dplyr::do(
       .congresso_api(.PROPOSICOES_PATH,
                      list(siglaTipo = .$tipo, numero = .$numero, ano = .$ano,
-                          ordem = "ASC", ordenarPor = "id", dataInicio = paste0(ano,"-01-01")))$dados$id %>%
+                          ordem = "ASC", ordenarPor = "id", dataInicio = paste0(ano,"-01-01")))$id %>%
+        .verifica_id(.WARNING_PROPOSICAO_ID) %>%
         .to_tibble()
     ) %>%
     unlist() %>%
@@ -103,7 +135,7 @@ fetch_id_proposicao <- function(tipo, numero, ano){
 #'
 #' @export
 .fetch_tipos_proposicao <- function(){
-  .congresso_api(.TIPOS_PROPOSICOES_PATH)$dados
+  .congresso_api(.TIPOS_PROPOSICOES_PATH)
 }
 
 #' @title Fetches the type of the proposition from its id
@@ -119,28 +151,7 @@ fetch_tipo_proposicao <- function(id_tipo_prop){
     dplyr::mutate(id = as.numeric(.$id))
 
   tibble::tibble(id = id_tipo_prop) %>%
-    dplyr::left_join(prop_types, by = "id")
-}
-
-#' @title Recovers the proposition status in the parlament
-#' @description Recovers the proposition status including: sequence, organ
-#' and date info about its processing in the parlament.
-#' @param id_prop Proposition's ID
-#' @return Dataframe containing the proposition's status
-#' @examples
-#' pec241_status <- fetch_status_proposicao(2088351)
-#' @seealso
-#'  \code{\link[rcongresso]{fetch_proposicao}}, \code{\link[rcongresso]{fetch_id_proposicao}}
-#' @rdname fetch_status_proposicao
-#' @export
-fetch_status_proposicao <- function(id_prop){
-  id <- NULL
-  tibble::tibble(id = id_prop) %>%
-    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id)) %>%
-    dplyr::group_by(id) %>%
-    dplyr::do(
-      .congresso_api(.$path)$dados$statusProposicao %>%
-        .remove_lists_and_nulls()
-    ) %>%
-    dplyr::ungroup()
+    dplyr::left_join(prop_types, by = "id") %>%
+    .assert_dataframe_completo(.COLNAMES_TIPO_PROPOSICAO) %>%
+    .coerce_types(.COLNAMES_TIPO_PROPOSICAO)
 }
